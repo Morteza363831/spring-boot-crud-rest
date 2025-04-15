@@ -48,4 +48,8 @@ public class Customer {
         this.username = username.toLowerCase();
     }
 
+    public String getUsername() {
+        return username.toLowerCase();
+    }
+
 }
