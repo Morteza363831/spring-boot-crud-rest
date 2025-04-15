@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class NotFoundException extends BaseException {
 
 
-    public NotFoundException(String message, HttpStatus status) {
+    public NotFoundException(String message) {
         super(message, HttpStatus.NOT_FOUND);
     }
 }
