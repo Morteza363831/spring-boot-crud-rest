@@ -5,7 +5,7 @@ import org.example.springbootcrudrest.model.Customer;
 import java.util.List;
 import java.util.Optional;
 
-public interface InMemoryRepository {
+public interface InMemoryCustomerRepository {
 
     Optional<Customer> findById(Long id);
 

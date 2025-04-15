@@ -4,7 +4,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.example.springbootcrudrest.model.*;
 import org.example.springbootcrudrest.repository.db.CustomerRepository;
-import org.example.springbootcrudrest.repository.inMem.InMemoryRepository;
+import org.example.springbootcrudrest.repository.inMem.InMemoryCustomerRepository;
 import org.example.springbootcrudrest.utility.Validator;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ import java.util.Optional;
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
-    private final InMemoryRepository inMemoryRepository;
+    private final InMemoryCustomerRepository inMemoryCustomerRepository;
     private final Validator validator;
 
 
@@ -36,7 +36,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerResultDto getCustomerByName(@NonNull String name) {
 
-        final Optional<Customer> foundedCustomer = inMemoryRepository.findByUsername(name);
+        final Optional<Customer> foundedCustomer = inMemoryCustomerRepository.findByUsername(name);
 
         if (foundedCustomer.isEmpty()) {
             // TODO : EXCEPTION HANDLING
@@ -50,7 +50,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         validator.validate(createDto);
 
-        final Optional<Customer> foundedCustomer = inMemoryRepository.findByUsername(createDto.getUsername());
+        final Optional<Customer> foundedCustomer = inMemoryCustomerRepository.findByUsername(createDto.getUsername());
 
         foundedCustomer.ifPresent(customer -> {
             // TODO : EXCEPTION HANDLING
@@ -72,7 +72,7 @@ public class CustomerServiceImpl implements CustomerService {
                 customer -> {
                     CustomerMapper.INSTANCE.partialUpdate(updateDto, customer);
                     customerRepository.save(customer);
-                    inMemoryRepository.update(customer);
+                    inMemoryCustomerRepository.update(customer);
                 }, () -> {
                     // TODO : EXCEPTION HANDLING
                 });
@@ -83,7 +83,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         validator.validate(deleteDto);
 
-        final Optional<Customer> customerOptional = inMemoryRepository.findByUsername(deleteDto.getUsername());
+        final Optional<Customer> customerOptional = inMemoryCustomerRepository.findByUsername(deleteDto.getUsername());
 
         customerOptional.ifPresentOrElse(
                 customerRepository::delete,
@@ -95,7 +95,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public List<CustomerResultDto> getAllCustomers() {
 
-        final List<Customer> customers = inMemoryRepository.findAll();
+        final List<Customer> customers = inMemoryCustomerRepository.findAll();
         final List<CustomerResultDto> resultDtos = new LinkedList<>();
         customers.forEach(customer -> {
             resultDtos.add(CustomerMapper.INSTANCE.toDto(customer));
@@ -105,6 +105,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void refreshCustomers() {
-        inMemoryRepository.refresh();
+        inMemoryCustomerRepository.refresh();
     }
 }

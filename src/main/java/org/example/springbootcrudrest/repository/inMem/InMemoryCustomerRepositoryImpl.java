@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 
-public class InMemoryRepositoryImpl implements InMemoryRepository {
+public class InMemoryCustomerRepositoryImpl implements InMemoryCustomerRepository {
 
     // properties
     private final List<Customer> customers;
@@ -19,7 +19,7 @@ public class InMemoryRepositoryImpl implements InMemoryRepository {
     // injection
     private final CustomerRepository customerRepository;
 
-    public InMemoryRepositoryImpl(CustomerRepository customerRepository) {
+    public InMemoryCustomerRepositoryImpl(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
         this.customers = customerRepository.findAll();
     }
