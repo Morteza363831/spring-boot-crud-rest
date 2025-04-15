@@ -20,6 +20,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
     private final InMemoryCustomerRepository inMemoryCustomerRepository;
+    private final DatabaseCustomerServiceImpl databaseCustomerService;
+    private final InMemoryCustomerServiceImpl inMemoryCustomerServiceImpl;
     private final Validator validator;
 
 
@@ -52,9 +54,9 @@ public class CustomerServiceImpl implements CustomerService {
             throw new DuplicateEntityException(createDto.getUsername());
         });
 
-        final Customer persistedCustomer = customerRepository.save(CustomerMapper.INSTANCE.toEntity(createDto));
+        final Customer persistedCustomer = databaseCustomerService.createCustomer(CustomerMapper.INSTANCE.toEntity(createDto));
 
-        return CustomerMapper.INSTANCE.toDto(persistedCustomer);
+        return CustomerMapper.INSTANCE.toDto(inMemoryCustomerServiceImpl.createCustomer(persistedCustomer));
     }
 
     @Override
@@ -67,8 +69,8 @@ public class CustomerServiceImpl implements CustomerService {
         foundedCustomer.ifPresentOrElse(
                 customer -> {
                     CustomerMapper.INSTANCE.partialUpdate(updateDto, customer);
-                    customerRepository.save(customer);
-                    inMemoryCustomerRepository.update(customer);
+                    databaseCustomerService.updateCustomer(name, customer);
+                    inMemoryCustomerServiceImpl.updateCustomer(name, customer);
                 }, () -> {
                     throw new NotFoundException(name);
                 });
