@@ -44,4 +44,8 @@ public class Customer {
     @Column(name = "LASTNAME", length = 40)
     private String lastname;
 
+    public void setUsername(String username) {
+        this.username = username.toLowerCase();
+    }
+
 }
