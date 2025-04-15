@@ -32,10 +32,6 @@ public class CustomerController {
     public ResponseEntity<ResultApi<CustomerResultDto>> getCustomer(@PathVariable Long id) {
 
         final CustomerResultDto customer = customerService.getCustomerById(id);
-        if (customer == null) {
-            return buildResponse("fail", null, ApiConstants.CUSTOMERS_BASE_PATH+"/id/" + id, HttpStatus.NOT_FOUND);
-        }
-
         return buildResponse("success", customer, ApiConstants.CUSTOMERS_BASE_PATH+"/id/" + id, HttpStatus.OK);
     }
 
@@ -43,11 +39,6 @@ public class CustomerController {
     public ResponseEntity<ResultApi<CustomerResultDto>> getCustomer(@PathVariable String name) {
 
         final CustomerResultDto customer = customerService.getCustomerByName(name);
-
-        if (customer == null) {
-            return buildResponse("fail", null, ApiConstants.CUSTOMERS_BASE_PATH+"/" + name, HttpStatus.NOT_FOUND);
-        }
-
         return buildResponse("success", customer, ApiConstants.CUSTOMERS_BASE_PATH+"/" + name, HttpStatus.OK);
     }
 
@@ -55,11 +46,6 @@ public class CustomerController {
     public ResponseEntity<ResultApi<CustomerResultDto>> createCustomer(@RequestBody CustomerCreateDto createDto) {
 
         final CustomerResultDto customer = customerService.createCustomer(createDto);
-
-        if (customer == null) {
-            return buildResponse("fail", null, ApiConstants.CUSTOMERS_BASE_PATH, HttpStatus.BAD_REQUEST);
-        }
-
         return buildResponse("success", customer, ApiConstants.CUSTOMERS_BASE_PATH, HttpStatus.CREATED);
     }
 
