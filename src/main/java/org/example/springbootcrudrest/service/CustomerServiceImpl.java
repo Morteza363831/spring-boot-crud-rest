@@ -27,24 +27,18 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerResultDto getCustomerById(@NonNull Long id) {
 
         final Optional<Customer> foundedCustomer = customerRepository.findById(id);
-
-        if (foundedCustomer.isEmpty()) {
-            throw new NotFoundException(id+"");
-        }
-
-        return CustomerMapper.INSTANCE.toDto(foundedCustomer.get());
+        return foundedCustomer
+                .map(CustomerMapper.INSTANCE::toDto)
+                .orElseThrow(() -> new NotFoundException(id+""));
     }
 
     @Override
     public CustomerResultDto getCustomerByName(@NonNull String name) {
 
         final Optional<Customer> foundedCustomer = inMemoryCustomerRepository.findByUsername(name);
-
-        if (foundedCustomer.isEmpty()) {
-            throw new NotFoundException(name);
-        }
-
-        return CustomerMapper.INSTANCE.toDto(foundedCustomer.get());
+        return foundedCustomer
+                .map(CustomerMapper.INSTANCE::toDto)
+                .orElseThrow(() -> new NotFoundException(name));
     }
 
     @Override
