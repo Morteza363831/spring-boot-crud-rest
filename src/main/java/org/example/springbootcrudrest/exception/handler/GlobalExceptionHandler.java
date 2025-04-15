@@ -48,6 +48,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleGeneralException(final Exception e,final HttpServletRequest request) {
+        log.error("Unhandled exception", e);
+        // correct response
+        /*return buildErrorResponse(new Exception("Internal server error"), HttpStatus.INTERNAL_SERVER_ERROR, request);*/
+
+        // wrong response
         return buildErrorResponse(e, HttpStatus.INTERNAL_SERVER_ERROR , request);
     }
 
