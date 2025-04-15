@@ -2,6 +2,8 @@ package org.example.springbootcrudrest.service;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.example.springbootcrudrest.exception.DuplicateEntityException;
+import org.example.springbootcrudrest.exception.NotFoundException;
 import org.example.springbootcrudrest.model.*;
 import org.example.springbootcrudrest.repository.db.CustomerRepository;
 import org.example.springbootcrudrest.repository.inMem.InMemoryCustomerRepository;
@@ -27,7 +29,7 @@ public class CustomerServiceImpl implements CustomerService {
         final Optional<Customer> foundedCustomer = customerRepository.findById(id);
 
         if (foundedCustomer.isEmpty()) {
-            // TODO : EXCEPTION HANDLING
+            throw new NotFoundException(id+"");
         }
 
         return CustomerMapper.INSTANCE.toDto(foundedCustomer.get());
@@ -39,7 +41,7 @@ public class CustomerServiceImpl implements CustomerService {
         final Optional<Customer> foundedCustomer = inMemoryCustomerRepository.findByUsername(name);
 
         if (foundedCustomer.isEmpty()) {
-            // TODO : EXCEPTION HANDLING
+            throw new NotFoundException(name);
         }
 
         return CustomerMapper.INSTANCE.toDto(foundedCustomer.get());
@@ -53,7 +55,7 @@ public class CustomerServiceImpl implements CustomerService {
         final Optional<Customer> foundedCustomer = inMemoryCustomerRepository.findByUsername(createDto.getUsername());
 
         foundedCustomer.ifPresent(customer -> {
-            // TODO : EXCEPTION HANDLING
+            throw new DuplicateEntityException(createDto.getUsername());
         });
 
         final Customer persistedCustomer = customerRepository.save(CustomerMapper.INSTANCE.toEntity(createDto));
@@ -74,7 +76,7 @@ public class CustomerServiceImpl implements CustomerService {
                     customerRepository.save(customer);
                     inMemoryCustomerRepository.update(customer);
                 }, () -> {
-                    // TODO : EXCEPTION HANDLING
+                    throw new NotFoundException(name);
                 });
     }
 
@@ -88,7 +90,7 @@ public class CustomerServiceImpl implements CustomerService {
         customerOptional.ifPresentOrElse(
                 customerRepository::delete,
                 () -> {
-                    // TODO : EXCEPTION HANDLING
+                    throw new NotFoundException(deleteDto.getUsername());
                 });
     }
 

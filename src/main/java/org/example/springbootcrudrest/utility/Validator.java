@@ -3,6 +3,7 @@ package org.example.springbootcrudrest.utility;
 import jakarta.validation.ConstraintViolation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.springbootcrudrest.exception.CustomValidationException;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -19,6 +20,8 @@ public class Validator {
 
         constraintViolations.forEach(constraintViolation -> log.error(constraintViolation.getMessage()));
 
-        // TODO : EXCEPTION HANDLING
+        if (!constraintViolations.isEmpty()) {
+            throw new CustomValidationException(constraintViolations);
+        }
     }
 }
