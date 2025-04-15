@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
- * DTO for {@link Customer}
+ * DTO for {@link Customer} -> immutable
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record CustomerResultDto(Long id, @NotNull @Size(max = 20) String username, @Size(max = 40) String firstname, @Size(max = 40) String lastname) implements Serializable {
