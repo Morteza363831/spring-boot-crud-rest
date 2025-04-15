@@ -46,11 +46,12 @@ public class InMemoryCustomerRepositoryImpl implements InMemoryCustomerRepositor
     }
 
     @Override
-    public void save(@NonNull Customer customer) {
+    public Customer save(@NonNull Customer customer) {
         customers.stream()
                 .filter(c -> c.getUsername().equalsIgnoreCase(customer.getUsername()))
                 .findFirst()
                 .ifPresentOrElse(c -> {}, () -> customers.add(customer));
+        return customer;
     }
 
     @Override

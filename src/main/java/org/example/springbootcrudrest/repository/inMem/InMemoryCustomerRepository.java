@@ -13,7 +13,7 @@ public interface InMemoryCustomerRepository {
 
     List<Customer> findAll();
 
-    void save(Customer customer);
+    Customer save(Customer customer);
 
     void delete(Customer customer);
 
