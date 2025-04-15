@@ -7,6 +7,7 @@ import org.example.springbootcrudrest.model.CustomerDeleteDto;
 import org.example.springbootcrudrest.model.CustomerResultDto;
 import org.example.springbootcrudrest.model.CustomerUpdateDto;
 import org.example.springbootcrudrest.service.CustomerService;
+import org.example.springbootcrudrest.utility.ApiConstants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +25,7 @@ public class CustomerController {
     @GetMapping
     public ResponseEntity<ResultApi<List<CustomerResultDto>>> getCustomers() {
 
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(new ResultApi<>("success", customerService.getAllCustomers(), "/api/v1/customers"));
+        return buildResponse("success", customerService.getAllCustomers(), ApiConstants.CUSTOMERS_BASE_PATH, HttpStatus.OK);
     }
 
     @GetMapping("/id/{id}")
@@ -34,14 +33,10 @@ public class CustomerController {
 
         final CustomerResultDto customer = customerService.getCustomerById(id);
         if (customer == null) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new ResultApi<>("fail", null, "/customers/id/" + id));
+            return buildResponse("fail", null, ApiConstants.CUSTOMERS_BASE_PATH+"/id/" + id, HttpStatus.NOT_FOUND);
         }
 
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(new ResultApi<>("success", customer, "/api/v1/customers/id/" + id));
+        return buildResponse("success", customer, ApiConstants.CUSTOMERS_BASE_PATH+"/id/" + id, HttpStatus.OK);
     }
 
     @GetMapping("/{name}")
@@ -50,14 +45,10 @@ public class CustomerController {
         final CustomerResultDto customer = customerService.getCustomerByName(name);
 
         if (customer == null) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new ResultApi<>("fail", null, "/customers/" + name));
+            return buildResponse("fail", null, ApiConstants.CUSTOMERS_BASE_PATH+"/" + name, HttpStatus.NOT_FOUND);
         }
 
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(new ResultApi<>("success", customer, "/api/v1/customers/" + name));
+        return buildResponse("success", customer, ApiConstants.CUSTOMERS_BASE_PATH+"/" + name, HttpStatus.OK);
     }
 
     @PostMapping
@@ -66,31 +57,27 @@ public class CustomerController {
         final CustomerResultDto customer = customerService.createCustomer(createDto);
 
         if (customer == null) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new ResultApi<>("fail", null, "/customers"));
+            return buildResponse("fail", null, ApiConstants.CUSTOMERS_BASE_PATH, HttpStatus.BAD_REQUEST);
         }
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(new ResultApi<>("success", customer, "/api/v1/customers"));
+        return buildResponse("success", customer, ApiConstants.CUSTOMERS_BASE_PATH, HttpStatus.CREATED);
     }
 
     @PutMapping("/{name}")
-    public ResponseEntity<ResultApi<?>> updateCustomer(@PathVariable String name, @RequestBody CustomerUpdateDto updateDto) {
+    public ResponseEntity<ResultApi<Object>> updateCustomer(@PathVariable String name, @RequestBody CustomerUpdateDto updateDto) {
 
         customerService.updateCustomer(name, updateDto);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(new ResultApi<>("success", null, "/customers/" + name));
+        return buildResponse("success", null, ApiConstants.CUSTOMERS_BASE_PATH+"/" + name, HttpStatus.OK);
     }
 
     @DeleteMapping()
-    public ResponseEntity<ResultApi<?>> deleteCustomer(@RequestBody CustomerDeleteDto deleteDto) {
+    public ResponseEntity<ResultApi<Object>> deleteCustomer(@RequestBody CustomerDeleteDto deleteDto) {
 
         customerService.deleteCustomer(deleteDto);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(new ResultApi<>("success", null, "/customers"));
+        return buildResponse("success", null, ApiConstants.CUSTOMERS_BASE_PATH, HttpStatus.OK);
+    }
+
+    private <T> ResponseEntity<ResultApi<T>> buildResponse(String message, T data, String path, HttpStatus httpStatus) {
+        return ResponseEntity.status(httpStatus).body(new ResultApi<>(message, data, path));
     }
 }
