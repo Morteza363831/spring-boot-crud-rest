@@ -1,15 +1,13 @@
 package org.example.springbootcrudrest.repository.inMem;
 
+import jakarta.annotation.PostConstruct;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import org.example.springbootcrudrest.model.Customer;
 import org.example.springbootcrudrest.repository.cachesync.CacheSynchronizer;
-import org.example.springbootcrudrest.repository.cachesync.CustomerCacheSynchronizerImpl;
-import org.example.springbootcrudrest.repository.db.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -18,9 +16,11 @@ import java.util.Optional;
 public class InMemoryCustomerRepositoryImpl implements InMemoryCustomerRepository {
 
     @Autowired
-    private CustomerCacheSynchronizerImpl cacheSynchronizer;
+    @Qualifier(value = "customerCacheSynchronizer")
+    private CacheSynchronizer<Customer> cacheSynchronizer;
 
-    public InMemoryCustomerRepositoryImpl(CustomerRepository customerRepository) {
+    @PostConstruct
+    public void init() {
         cacheSynchronizer.initialize();
     }
 
