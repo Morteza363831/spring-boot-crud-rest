@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class CustomerServiceImpl implements CustomerService {
+public class CustomerCrudServiceImpl implements CustomerCrudService {
 
     private final CustomerRepository customerRepository;
     private final InMemoryCustomerRepository inMemoryCustomerRepository;
@@ -101,8 +101,5 @@ public class CustomerServiceImpl implements CustomerService {
         return resultDtos;
     }
 
-    @Override
-    public void refreshCustomers() {
-        inMemoryCustomerRepository.refresh();
-    }
+
 }

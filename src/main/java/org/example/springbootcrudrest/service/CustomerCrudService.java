@@ -4,7 +4,7 @@ import org.example.springbootcrudrest.model.*;
 
 import java.util.List;
 
-public interface CustomerService {
+public interface CustomerCrudService {
 
     CustomerResultDto getCustomerById(Long id);
 
@@ -18,7 +18,7 @@ public interface CustomerService {
 
     List<CustomerResultDto> getAllCustomers();
 
-    void refreshCustomers();
+
 
 
 }

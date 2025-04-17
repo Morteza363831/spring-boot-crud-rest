@@ -6,7 +6,7 @@ import org.example.springbootcrudrest.model.CustomerCreateDto;
 import org.example.springbootcrudrest.model.CustomerDeleteDto;
 import org.example.springbootcrudrest.model.CustomerResultDto;
 import org.example.springbootcrudrest.model.CustomerUpdateDto;
-import org.example.springbootcrudrest.service.CustomerService;
+import org.example.springbootcrudrest.service.CustomerCrudService;
 import org.example.springbootcrudrest.utility.ApiConstants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,47 +19,47 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CustomerController {
 
-    private final CustomerService customerService;
+    private final CustomerCrudService customerCrudService;
 
 
     @GetMapping
     public ResponseEntity<ResultApi<List<CustomerResultDto>>> getCustomers() {
 
-        return buildResponse("success", customerService.getAllCustomers(), ApiConstants.CUSTOMERS_BASE_PATH, HttpStatus.OK);
+        return buildResponse("success", customerCrudService.getAllCustomers(), ApiConstants.CUSTOMERS_BASE_PATH, HttpStatus.OK);
     }
 
     @GetMapping("/id/{id}")
     public ResponseEntity<ResultApi<CustomerResultDto>> getCustomer(@PathVariable Long id) {
 
-        final CustomerResultDto customer = customerService.getCustomerById(id);
+        final CustomerResultDto customer = customerCrudService.getCustomerById(id);
         return buildResponse("success", customer, ApiConstants.CUSTOMERS_BASE_PATH+"/id/" + id, HttpStatus.OK);
     }
 
     @GetMapping("/{name}")
     public ResponseEntity<ResultApi<CustomerResultDto>> getCustomer(@PathVariable String name) {
 
-        final CustomerResultDto customer = customerService.getCustomerByName(name);
+        final CustomerResultDto customer = customerCrudService.getCustomerByName(name);
         return buildResponse("success", customer, ApiConstants.CUSTOMERS_BASE_PATH+"/" + name, HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<ResultApi<CustomerResultDto>> createCustomer(@RequestBody CustomerCreateDto createDto) {
 
-        final CustomerResultDto customer = customerService.createCustomer(createDto);
+        final CustomerResultDto customer = customerCrudService.createCustomer(createDto);
         return buildResponse("success", customer, ApiConstants.CUSTOMERS_BASE_PATH, HttpStatus.CREATED);
     }
 
     @PutMapping("/{name}")
     public ResponseEntity<ResultApi<Object>> updateCustomer(@PathVariable String name, @RequestBody CustomerUpdateDto updateDto) {
 
-        customerService.updateCustomer(name, updateDto);
+        customerCrudService.updateCustomer(name, updateDto);
         return buildResponse("success", null, ApiConstants.CUSTOMERS_BASE_PATH+"/" + name, HttpStatus.OK);
     }
 
     @DeleteMapping()
     public ResponseEntity<ResultApi<Object>> deleteCustomer(@RequestBody CustomerDeleteDto deleteDto) {
 
-        customerService.deleteCustomer(deleteDto);
+        customerCrudService.deleteCustomer(deleteDto);
         return buildResponse("success", null, ApiConstants.CUSTOMERS_BASE_PATH, HttpStatus.OK);
     }
 
