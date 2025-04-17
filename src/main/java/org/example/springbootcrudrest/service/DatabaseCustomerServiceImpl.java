@@ -28,4 +28,9 @@ public class DatabaseCustomerServiceImpl implements CustomerPersistenceService {
             customerRepository.save(customer);
         }
     }
+
+    @Override
+    public void deleteCustomer(Customer customer) {
+        customerRepository.delete(customer);
+    }
 }

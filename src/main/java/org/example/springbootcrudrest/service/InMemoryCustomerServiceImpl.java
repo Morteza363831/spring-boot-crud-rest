@@ -21,4 +21,9 @@ public class InMemoryCustomerServiceImpl implements CustomerPersistenceService {
     public void updateCustomer(String name,@NonNull Customer customer) {
         customerRepository.update(customer);
     }
+
+    @Override
+    public void deleteCustomer(Customer customer) {
+        customerRepository.delete(customer);
+    }
 }

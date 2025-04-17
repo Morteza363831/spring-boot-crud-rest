@@ -66,7 +66,7 @@ public class CustomerCrudServiceImpl implements CustomerCrudService {
 
         validator.validate(updateDto);
 
-        final Optional<Customer> foundedCustomer = customerRepository.findByUsername(name);
+        final Optional<Customer> foundedCustomer = inMemoryCustomerRepository.findByUsername(name);
 
         foundedCustomer.ifPresentOrElse(
                 customer -> {
@@ -87,8 +87,8 @@ public class CustomerCrudServiceImpl implements CustomerCrudService {
 
         customerOptional.ifPresentOrElse(
                 customer -> {
-                    customerRepository.delete(customer);
-                    inMemoryCustomerRepository.delete(customer);
+                    databaseCustomerService.deleteCustomer(customer);
+                    inMemoryCustomerServiceImpl.deleteCustomer(customer);
                 },
                 () -> {
                     throw new NotFoundException(deleteDto.getUsername());
