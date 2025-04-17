@@ -30,7 +30,7 @@ public class CustomerCrudServiceImpl implements CustomerCrudService {
     @Override
     public CustomerResultDto getCustomerById(@NonNull Long id) {
 
-        final Optional<Customer> foundedCustomer = customerRepository.findById(id);
+        final Optional<Customer> foundedCustomer = inMemoryCustomerRepository.findById(id);
         return foundedCustomer
                 .map(customerMapper::toDto)
                 .orElseThrow(() -> new NotFoundException(id+""));
@@ -86,7 +86,10 @@ public class CustomerCrudServiceImpl implements CustomerCrudService {
         final Optional<Customer> customerOptional = inMemoryCustomerRepository.findByUsername(deleteDto.getUsername());
 
         customerOptional.ifPresentOrElse(
-                customerRepository::delete,
+                customer -> {
+                    customerRepository.delete(customer);
+                    inMemoryCustomerRepository.delete(customer);
+                },
                 () -> {
                     throw new NotFoundException(deleteDto.getUsername());
                 });
