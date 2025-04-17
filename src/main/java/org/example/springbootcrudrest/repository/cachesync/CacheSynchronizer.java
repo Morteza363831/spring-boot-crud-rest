@@ -1,4 +1,4 @@
-package org.example.springbootcrudrest.repository.inMem;
+package org.example.springbootcrudrest.repository.cachesync;
 
 public interface CacheSynchronizer<T> {
 

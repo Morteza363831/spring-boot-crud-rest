@@ -1,4 +1,4 @@
-package org.example.springbootcrudrest.repository.inMem;
+package org.example.springbootcrudrest.repository.cachesync;
 
 import lombok.RequiredArgsConstructor;
 import org.example.springbootcrudrest.exception.DuplicateEntityException;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
+@Component(value = "customerCacheSynchronizer")
 @RequiredArgsConstructor
 public class CustomerCacheSynchronizerImpl implements CacheSynchronizer<Customer> {
 
