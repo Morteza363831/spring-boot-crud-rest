@@ -22,9 +22,6 @@ import java.util.Optional;
 public class CustomerCrudServiceTest {
 
     @Mock
-    private CustomerRepository customerRepository;
-
-    @Mock
     private InMemoryCustomerRepository inMemoryCustomerRepository;
 
     @Mock
