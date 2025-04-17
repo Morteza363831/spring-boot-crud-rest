@@ -6,8 +6,6 @@ import org.mapstruct.factory.Mappers;
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
 public interface CustomerMapper {
 
-    CustomerMapper INSTANCE = Mappers.getMapper(CustomerMapper.class);
-
     Customer toEntity(CustomerCreateDto customerCreateDto);
 
     Customer toEntity(CustomerResultDto customerResultDto);

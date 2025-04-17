@@ -23,6 +23,8 @@ public class CustomerCrudServiceImpl implements CustomerCrudService {
     private final DatabaseCustomerServiceImpl databaseCustomerService;
     private final InMemoryCustomerServiceImpl inMemoryCustomerServiceImpl;
     private final Validator validator;
+    private final CustomerMapper customerMapper;
+
 
 
     @Override
@@ -30,7 +32,7 @@ public class CustomerCrudServiceImpl implements CustomerCrudService {
 
         final Optional<Customer> foundedCustomer = customerRepository.findById(id);
         return foundedCustomer
-                .map(CustomerMapper.INSTANCE::toDto)
+                .map(customerMapper::toDto)
                 .orElseThrow(() -> new NotFoundException(id+""));
     }
 
@@ -39,7 +41,7 @@ public class CustomerCrudServiceImpl implements CustomerCrudService {
 
         final Optional<Customer> foundedCustomer = inMemoryCustomerRepository.findByUsername(name);
         return foundedCustomer
-                .map(CustomerMapper.INSTANCE::toDto)
+                .map(customerMapper::toDto)
                 .orElseThrow(() -> new NotFoundException(name));
     }
 
@@ -54,9 +56,9 @@ public class CustomerCrudServiceImpl implements CustomerCrudService {
             throw new DuplicateEntityException(createDto.getUsername());
         });
 
-        final Customer persistedCustomer = databaseCustomerService.createCustomer(CustomerMapper.INSTANCE.toEntity(createDto));
+        final Customer persistedCustomer = databaseCustomerService.createCustomer(customerMapper.toEntity(createDto));
 
-        return CustomerMapper.INSTANCE.toDto(inMemoryCustomerServiceImpl.createCustomer(persistedCustomer));
+        return customerMapper.toDto(inMemoryCustomerServiceImpl.createCustomer(persistedCustomer));
     }
 
     @Override
@@ -68,7 +70,7 @@ public class CustomerCrudServiceImpl implements CustomerCrudService {
 
         foundedCustomer.ifPresentOrElse(
                 customer -> {
-                    CustomerMapper.INSTANCE.partialUpdate(updateDto, customer);
+                    customerMapper.partialUpdate(updateDto, customer);
                     databaseCustomerService.updateCustomer(name, customer);
                     inMemoryCustomerServiceImpl.updateCustomer(name, customer);
                 }, () -> {
@@ -96,7 +98,7 @@ public class CustomerCrudServiceImpl implements CustomerCrudService {
         final List<Customer> customers = inMemoryCustomerRepository.findAll();
         final List<CustomerResultDto> resultDtos = new LinkedList<>();
         customers.forEach(customer -> {
-            resultDtos.add(CustomerMapper.INSTANCE.toDto(customer));
+            resultDtos.add(customerMapper.toDto(customer));
         });
         return resultDtos;
     }
