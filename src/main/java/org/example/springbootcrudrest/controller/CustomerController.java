@@ -64,6 +64,6 @@ public class CustomerController {
     }
 
     private <T> ResponseEntity<ResultApi<T>> buildResponse(String message, T data, String path, HttpStatus httpStatus) {
-        return ResponseEntity.status(httpStatus).body(new ResultApi<>(message, data, path));
+        return ResponseEntity.status(httpStatus).header("Content-Type", "application/json").body(new ResultApi<>(message, data, path));
     }
 }
