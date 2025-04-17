@@ -18,12 +18,10 @@ import java.io.Serializable;
 @Accessors(chain = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CustomerUpdateDto implements Serializable {
-    @NotNull(message = "username cannot be null")
     @Size(message = "username maximum size is 20", max = 20)
     private String username;
     @Size(message = "firstname maximum size is 40", max = 40)
     private String firstname;
-    @NotNull(message = "password cannot be null")
     @Size(message = "password maximum size is 30", max = 30)
     private String password;
     @Size(message = "lastname maximum size is 40", max = 40)
