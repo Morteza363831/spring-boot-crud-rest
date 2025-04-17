@@ -7,6 +7,7 @@ import org.example.springbootcrudrest.model.Customer;
 import org.example.springbootcrudrest.repository.db.CustomerRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Component(value = "customerCacheSynchronizer")
@@ -67,5 +68,10 @@ public class CustomerCacheSynchronizerImpl implements CacheSynchronizer<Customer
                         () -> {
                             throw new NotFoundException(customer.getUsername());
                         });
+    }
+
+    @Override
+    public List<Customer> getAll() {
+        return new LinkedList<>(customers);
     }
 }
