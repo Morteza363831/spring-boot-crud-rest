@@ -1,32 +1,33 @@
 package org.example.springbootcrudrest.repository.inMem;
 
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.example.springbootcrudrest.model.Customer;
+import org.example.springbootcrudrest.repository.cachesync.CacheSynchronizer;
+import org.example.springbootcrudrest.repository.cachesync.CustomerCacheSynchronizerImpl;
 import org.example.springbootcrudrest.repository.db.CustomerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-
 public class InMemoryCustomerRepositoryImpl implements InMemoryCustomerRepository {
 
-    // properties
-    private final List<Customer> customers;
-
-    // injection
-    private final CustomerRepository customerRepository;
+    @Autowired
+    private CustomerCacheSynchronizerImpl cacheSynchronizer;
 
     public InMemoryCustomerRepositoryImpl(CustomerRepository customerRepository) {
-        this.customerRepository = customerRepository;
-        this.customers = customerRepository.findAll();
+        cacheSynchronizer.initialize();
     }
 
     @Override
     public Optional<Customer> findById(@NonNull Long id) {
-        return customers
+        return cacheSynchronizer
+                .getAll()
                 .stream()
                 .filter(customer -> customer.getId().equals(id))
                 .findFirst();
@@ -34,7 +35,9 @@ public class InMemoryCustomerRepositoryImpl implements InMemoryCustomerRepositor
 
     @Override
     public Optional<Customer> findByUsername(@NonNull String username) {
-        return customers
+
+        return cacheSynchronizer
+                .getAll()
                 .stream()
                 .filter(customer -> customer.getUsername().equalsIgnoreCase(username))
                 .findFirst();
@@ -42,43 +45,27 @@ public class InMemoryCustomerRepositoryImpl implements InMemoryCustomerRepositor
 
     @Override
     public List<Customer> findAll() {
-        return new ArrayList<>(customers);
+        return new LinkedList<>(cacheSynchronizer.getAll());
     }
 
     @Override
     public Customer save(@NonNull Customer customer) {
-        customers.stream()
-                .filter(c -> c.getUsername().equalsIgnoreCase(customer.getUsername()))
-                .findFirst()
-                .ifPresentOrElse(c -> {}, () -> customers.add(customer));
+        cacheSynchronizer.add(customer);
         return customer;
     }
 
     @Override
     public void delete(@NonNull Customer customer) {
-        customers.removeIf(c -> c.getUsername().equalsIgnoreCase(customer.getUsername()));
+        cacheSynchronizer.remove(customer);
     }
 
     @Override
     public void update(@NonNull Customer customer) {
-        customers.stream()
-                .filter(c -> c.getUsername().equalsIgnoreCase(customer.getUsername()))
-                .findFirst()
-                .ifPresent(c -> {
-                    partialUpdate(c, customer);
-                });
+        cacheSynchronizer.update(customer);
     }
 
     @Override
     public void refresh() {
-        customers.clear();
-        customers.addAll(customerRepository.findAll());
-    }
-
-    private void partialUpdate(Customer oldCustomer, Customer newCustomer) {
-        oldCustomer.setUsername(newCustomer.getUsername());
-        oldCustomer.setPassword(newCustomer.getPassword());
-        oldCustomer.setFirstname(newCustomer.getFirstname());
-        oldCustomer.setLastname(newCustomer.getLastname());
+        cacheSynchronizer.refresh();
     }
 }
