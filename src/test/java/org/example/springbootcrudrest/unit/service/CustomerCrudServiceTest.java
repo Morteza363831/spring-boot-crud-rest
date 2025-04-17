@@ -1,10 +1,12 @@
-package org.example.springbootcrudrest.service;
+package org.example.springbootcrudrest.unit.service;
 
 import org.example.springbootcrudrest.exception.DuplicateEntityException;
 import org.example.springbootcrudrest.exception.NotFoundException;
 import org.example.springbootcrudrest.model.*;
-import org.example.springbootcrudrest.repository.db.CustomerRepository;
 import org.example.springbootcrudrest.repository.inMem.InMemoryCustomerRepository;
+import org.example.springbootcrudrest.service.CustomerCrudServiceImpl;
+import org.example.springbootcrudrest.service.DatabaseCustomerServiceImpl;
+import org.example.springbootcrudrest.service.InMemoryCustomerServiceImpl;
 import org.example.springbootcrudrest.utility.Validator;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
