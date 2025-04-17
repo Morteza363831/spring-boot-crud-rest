@@ -15,7 +15,7 @@ import java.util.List;
 public class CustomerCacheSynchronizerImpl implements CacheSynchronizer<Customer> {
 
 
-    private final List<Customer> customers;
+    private final List<Customer> customers = new LinkedList<>();
 
     private final CustomerRepository customerRepository;
 
