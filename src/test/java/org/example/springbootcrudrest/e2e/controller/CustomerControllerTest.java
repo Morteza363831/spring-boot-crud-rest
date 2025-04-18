@@ -1,4 +1,4 @@
-package org.example.springbootcrudrest.unit.controller;
+package org.example.springbootcrudrest.e2e.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
